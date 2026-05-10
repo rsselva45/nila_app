@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: learning-path-api
+
+  datasource:
+    url: ${SQLITE_URL:jdbc:sqlite:./data/nila.db}
+    driver-class-name: org.sqlite.JDBC
+
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+
+server:
+  port: 8080
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:5174,http://localhost:4200,https://nila-app-neon.vercel.app/}
+
+logging:
+  level:
+    com.nila: INFO
