@@ -25,8 +25,7 @@ const nodeTypes = {
   groupNode: GroupNode,
 };
 
-let nodeIdCounter = 100;
-const generateId = () => `node-${++nodeIdCounter}`;
+const generateId = () => `node-${crypto.randomUUID().slice(0, 8)}`;
 
 function CanvasInner() {
   const wrapperRef = useRef<HTMLDivElement>(null);

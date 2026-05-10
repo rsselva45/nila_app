@@ -1,7 +1,10 @@
 import type { Node, Edge } from 'reactflow';
-import type { SectionNodeData, GroupNodeData } from '../types';
+import type { SectionNodeData, GroupNodeData, NodeCondition } from '../types';
 
-const BASE_URL = 'https://nilaapp-production.up.railway.app/api';
+// const BASE_URL = 'https://nilaapp-production.up.railway.app/api';
+
+const BASE_URL = 'http://localhost:8080/api';
+
 
 // ── API shape types ──────────────────────────────────────────────────────────
 
@@ -27,6 +30,12 @@ export interface ApiNodeConfig {
   assessment?: { maxScore: number; passingScore: number };
 }
 
+export interface ApiNodeStyle {
+  width?: number;
+  height?: number;
+  zIndex?: number;
+}
+
 export interface ApiNode {
   id: string;
   componentId?: string;
@@ -35,6 +44,8 @@ export interface ApiNode {
   description?: string;
   position: { x: number; y: number };
   config?: ApiNodeConfig;
+  parentId?: string;
+  style?: ApiNodeStyle;
 }
 
 export interface ApiEdgeRule {
@@ -80,6 +91,14 @@ function mapToApiNode(node: Node<AnyNodeData>): ApiNode {
   const rfType = node.type;
   const data = node.data;
 
+  const style = node.style
+    ? {
+        width: typeof node.style.width === 'number' ? node.style.width : undefined,
+        height: typeof node.style.height === 'number' ? node.style.height : undefined,
+        zIndex: typeof node.style.zIndex === 'number' ? node.style.zIndex : undefined,
+      }
+    : undefined;
+
   if (rfType === 'startNode') {
     return { id, componentId: 'system:start', type: 'start', label: data.label, position };
   }
@@ -87,7 +106,7 @@ function mapToApiNode(node: Node<AnyNodeData>): ApiNode {
     return { id, componentId: 'system:end', type: 'end', label: data.label, position };
   }
   if (rfType === 'groupNode') {
-    return { id, type: 'group', label: data.label, description: (data as GroupNodeData).description, position };
+    return { id, type: 'group', label: data.label, description: (data as GroupNodeData).description, position, style };
   }
   // sectionNode
   const sdata = data as SectionNodeData;
@@ -99,6 +118,8 @@ function mapToApiNode(node: Node<AnyNodeData>): ApiNode {
     description: sdata.description,
     position,
     config: sdata.durationMinutes != null ? { approximateDurationMinutes: sdata.durationMinutes } : undefined,
+    parentId: (node as Node & { parentNode?: string }).parentNode,
+    style,
   };
 }
 
@@ -147,6 +168,77 @@ export function buildLearningPathPayload(
     nodes: nodes.map(mapToApiNode),
     edges: edges.map((e) => mapToApiEdge(e, nodes)),
   };
+}
+
+// ── API → Canvas mapping ─────────────────────────────────────────────────────
+
+function mapApiNodeToRf(apiNode: ApiNode, conditions: NodeCondition[]): Node<AnyNodeData> {
+  const pos = apiNode.position;
+  const style = apiNode.style as Record<string, unknown> | undefined;
+
+  if (apiNode.type === 'start') {
+    return { id: apiNode.id, type: 'startNode', position: pos, data: { label: apiNode.label, nodeType: 'startNode' } };
+  }
+  if (apiNode.type === 'end') {
+    return { id: apiNode.id, type: 'endNode', position: pos, data: { label: apiNode.label, nodeType: 'endNode' } };
+  }
+  if (apiNode.type === 'group') {
+    return {
+      id: apiNode.id,
+      type: 'groupNode',
+      position: pos,
+      style,
+      data: { label: apiNode.label, description: apiNode.description, nodeType: 'groupNode' },
+    };
+  }
+  // unit | assessment → sectionNode
+  const sectionData: SectionNodeData = {
+    label: apiNode.label,
+    nodeType: 'sectionNode',
+    componentId: apiNode.componentId,
+    componentType: apiNode.type as 'unit' | 'assessment',
+    durationMinutes: apiNode.config?.approximateDurationMinutes,
+    description: apiNode.description,
+    conditions: conditions.length > 0 ? conditions : undefined,
+    parentGroupId: apiNode.parentId,
+  };
+  return {
+    id: apiNode.id,
+    type: 'sectionNode',
+    position: pos,
+    style,
+    data: sectionData,
+    ...(apiNode.parentId ? { parentNode: apiNode.parentId, extent: 'parent' as const } : {}),
+  };
+}
+
+export function mapFromApiPath(path: ApiLearningPath): { nodes: Node<AnyNodeData>[]; edges: Edge[] } {
+  // Build conditions lookup: targetNodeId → NodeCondition[]
+  const condsByTarget = new Map<string, NodeCondition[]>();
+  for (const edge of path.edges) {
+    for (const rule of edge.conditions?.rules ?? []) {
+      const list = condsByTarget.get(edge.targetNodeId) ?? [];
+      list.push({
+        id: rule.id,
+        sourceNodeId: rule.sourceNodeId,
+        metric: rule.metric as NodeCondition['metric'],
+        operator: rule.operator as NodeCondition['operator'],
+        value: rule.value as number,
+      });
+      condsByTarget.set(edge.targetNodeId, list);
+    }
+  }
+
+  const nodes = path.nodes.map((n) => mapApiNodeToRf(n, condsByTarget.get(n.id) ?? []));
+  const edges: Edge[] = path.edges.map((e) => ({
+    id: e.id,
+    source: e.sourceNodeId,
+    target: e.targetNodeId,
+    type: 'smoothstep',
+    animated: true,
+  }));
+
+  return { nodes, edges };
 }
 
 // ── Fetch helpers ────────────────────────────────────────────────────────────

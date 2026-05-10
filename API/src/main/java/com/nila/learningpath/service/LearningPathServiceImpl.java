@@ -16,7 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -60,13 +62,21 @@ public class LearningPathServiceImpl implements LearningPathService {
         entity.getEdges().clear();
 
         if (dto.nodes() != null) {
+            Map<String, NodeDto> uniqueNodes = new LinkedHashMap<>();
             for (NodeDto nd : dto.nodes()) {
+                uniqueNodes.put(nd.id(), nd);
+            }
+            for (NodeDto nd : uniqueNodes.values()) {
                 entity.getNodes().add(toNodeEntity(nd, entity));
             }
         }
 
         if (dto.edges() != null) {
+            Map<String, EdgeDto> uniqueEdges = new LinkedHashMap<>();
             for (EdgeDto ed : dto.edges()) {
+                uniqueEdges.put(ed.id(), ed);
+            }
+            for (EdgeDto ed : uniqueEdges.values()) {
                 entity.getEdges().add(toEdgeEntity(ed, entity));
             }
         }
@@ -106,8 +116,9 @@ public class LearningPathServiceImpl implements LearningPathService {
     private NodeDto toNodeDto(LpNodeEntity n) {
         NodeDto.PositionDto pos = new NodeDto.PositionDto(n.getPositionX(), n.getPositionY());
         NodeDto.ConfigDto config = parseNodeConfig(n.getConfigJson());
+        NodeDto.StyleDto style = parseStyle(n.getStyleJson());
         return new NodeDto(n.getId(), n.getComponentId(), n.getType(),
-                n.getLabel(), n.getDescription(), pos, config);
+                n.getLabel(), n.getDescription(), pos, config, n.getParentId(), style);
     }
 
     private EdgeDto toEdgeDto(LpEdgeEntity e) {
@@ -129,6 +140,8 @@ public class LearningPathServiceImpl implements LearningPathService {
         e.setPositionX(dto.position().x());
         e.setPositionY(dto.position().y());
         e.setConfigJson(serializeConfig(dto.config()));
+        e.setParentId(dto.parentId());
+        e.setStyleJson(serializeStyle(dto.style()));
         return e;
     }
 
@@ -164,6 +177,26 @@ public class LearningPathServiceImpl implements LearningPathService {
         } catch (JsonProcessingException ex) {
             log.warn("Could not serialize conditions: {}", ex.getMessage());
             return "{\"operator\":\"AND\",\"rules\":[]}";
+        }
+    }
+
+    private String serializeStyle(NodeDto.StyleDto style) {
+        if (style == null) return null;
+        try {
+            return objectMapper.writeValueAsString(style);
+        } catch (JsonProcessingException ex) {
+            log.warn("Could not serialize node style: {}", ex.getMessage());
+            return null;
+        }
+    }
+
+    private NodeDto.StyleDto parseStyle(String json) {
+        if (json == null || json.isBlank()) return null;
+        try {
+            return objectMapper.readValue(json, NodeDto.StyleDto.class);
+        } catch (Exception ex) {
+            log.warn("Could not parse node style JSON: {}", ex.getMessage());
+            return null;
         }
     }
 

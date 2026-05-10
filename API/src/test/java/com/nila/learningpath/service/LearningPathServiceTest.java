@@ -74,7 +74,7 @@ class LearningPathServiceTest {
     @Test
     void save_persistsNodesAndEdges() {
         NodeDto node = new NodeDto("n1", "cmp-1", "assessment", "Math 1", null,
-                new NodeDto.PositionDto(100.0, 200.0), null);
+                new NodeDto.PositionDto(100.0, 200.0), null, null, null);
         EdgeDto edge = new EdgeDto("e1", "n1", "n2", "label", 1, false,
                 new EdgeDto.ConditionsDto("AND", List.of()));
         LearningPathDto dto = new LearningPathDto("lp-1", "Path", null, "draft", 1,

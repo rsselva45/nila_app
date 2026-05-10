@@ -32,7 +32,13 @@ public record NodeDto(
         PositionDto position,
 
         @Valid
-        ConfigDto config
+        ConfigDto config,
+
+        @Size(max = 100)
+        String parentId,
+
+        @Valid
+        StyleDto style
 ) {
 
     public record PositionDto(@NotNull Double x, @NotNull Double y) {}
@@ -44,4 +50,7 @@ public record NodeDto(
     ) {
         public record AssessmentConfigDto(int maxScore, int passingScore) {}
     }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public record StyleDto(Double width, Double height, Integer zIndex) {}
 }
