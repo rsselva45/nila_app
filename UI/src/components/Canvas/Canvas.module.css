@@ -1,0 +1,52 @@
+.canvasWrapper {
+  flex: 1;
+  position: relative;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+/* Override React Flow controls styling */
+.controls {
+  border-radius: 8px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  overflow: hidden;
+}
+
+.minimap {
+  border-radius: 8px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Edge animations */
+:global(.react-flow__edge-path) {
+  stroke: #94a3b8;
+  stroke-width: 2px;
+}
+
+:global(.react-flow__edge.animated .react-flow__edge-path) {
+  stroke-dasharray: 5;
+  animation: dashdraw 0.5s linear infinite;
+}
+
+:global(.react-flow__edge.selected .react-flow__edge-path) {
+  stroke: #3b82f6;
+  stroke-width: 2.5px;
+}
+
+:global(.react-flow__arrowhead) {
+  fill: #94a3b8;
+}
+
+@keyframes dashdraw {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+/* Connection line */
+:global(.react-flow__connection-path) {
+  stroke: #3b82f6;
+  stroke-width: 2px;
+}
