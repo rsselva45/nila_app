@@ -3,6 +3,10 @@ import type { Node, Edge, NodeChange, EdgeChange, Connection } from 'reactflow';
 import { applyNodeChanges, applyEdgeChanges, addEdge } from 'reactflow';
 import { initialNodes, initialEdges } from '../data/initialData';
 import type { SectionNodeData, GroupNodeData, NodeCondition } from '../types';
+import type { ApiLearningPath } from '../services/api';
+import { mapFromApiPath } from '../services/api';
+
+const LP_ID_KEY = 'nila_lp_id';
 
 type AnyNodeData = SectionNodeData | GroupNodeData;
 
@@ -36,6 +40,7 @@ interface AppState {
   setLearningPathName: (name: string) => void;
   setSaveStatus: (status: SaveStatus, error?: string | null) => void;
   setLearningPathId: (id: string) => void;
+  loadCanvas: (path: ApiLearningPath) => void;
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -44,14 +49,29 @@ export const useStore = create<AppState>((set) => ({
   selectedNodeId: null,
   selectedEdgeId: null,
 
-  learningPathId: null,
+  learningPathId: localStorage.getItem(LP_ID_KEY),
   learningPathName: 'SAT Adaptive Learning Path',
   saveStatus: 'idle',
   saveError: null,
 
   setLearningPathName: (name) => set({ learningPathName: name }),
   setSaveStatus: (status, error = null) => set({ saveStatus: status, saveError: error }),
-  setLearningPathId: (id) => set({ learningPathId: id }),
+  setLearningPathId: (id) => {
+    localStorage.setItem(LP_ID_KEY, id);
+    set({ learningPathId: id });
+  },
+  loadCanvas: (path) => {
+    const { nodes, edges } = mapFromApiPath(path);
+    if (path.id) localStorage.setItem(LP_ID_KEY, path.id);
+    set({
+      nodes,
+      edges,
+      learningPathId: path.id ?? null,
+      learningPathName: path.name,
+      selectedNodeId: null,
+      selectedEdgeId: null,
+    });
+  },
 
   onNodesChange: (changes) =>
     set((state) => ({ nodes: applyNodeChanges(changes, state.nodes) as Node<AnyNodeData>[] })),

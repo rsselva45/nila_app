@@ -77,8 +77,10 @@ class LearningPathControllerTest {
     // ── helpers ──────────────────────────────────────────────────────────────
 
     private LearningPathDto buildRequest(String name, String status) {
+        // NodeDto node = new NodeDto("n1", "cmp-1", "assessment", "Module 1", null,
+        //         new NodeDto.PositionDto(0.0, 0.0), null);
         NodeDto node = new NodeDto("n1", "cmp-1", "assessment", "Module 1", null,
-                new NodeDto.PositionDto(0.0, 0.0), null);
+                new NodeDto.PositionDto(0.0, 0.0), null, status, null);
         EdgeDto edge = new EdgeDto("e1", "n1", "n2", null, 1, false,
                 new EdgeDto.ConditionsDto("AND", List.of()));
         return new LearningPathDto(null, name, null, status, 1, null,

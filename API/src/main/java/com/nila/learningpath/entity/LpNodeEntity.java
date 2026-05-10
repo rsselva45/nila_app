@@ -37,6 +37,14 @@ public class LpNodeEntity {
     @Column(name = "config_json", columnDefinition = "TEXT")
     private String configJson;
 
+    /** ID of the parent group node, null for top-level nodes */
+    @Column(name = "parent_id", length = 100)
+    private String parentId;
+
+    /** JSON blob: {"width": N, "height": N, "zIndex": N} for group sizing */
+    @Column(name = "style_json", columnDefinition = "TEXT")
+    private String styleJson;
+
     // ── Getters & setters ────────────────────────────────────────────────────
 
     public String getId() { return id; }
@@ -65,4 +73,10 @@ public class LpNodeEntity {
 
     public String getConfigJson() { return configJson; }
     public void setConfigJson(String configJson) { this.configJson = configJson; }
+
+    public String getParentId() { return parentId; }
+    public void setParentId(String parentId) { this.parentId = parentId; }
+
+    public String getStyleJson() { return styleJson; }
+    public void setStyleJson(String styleJson) { this.styleJson = styleJson; }
 }
