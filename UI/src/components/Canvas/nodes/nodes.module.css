@@ -1,0 +1,219 @@
+/* ─── Shared handle ─────────────────────────────────────────────── */
+.handle {
+  width: 8px !important;
+  height: 8px !important;
+  background: #94a3b8 !important;
+  border: 2px solid #ffffff !important;
+  border-radius: 50% !important;
+}
+
+/* ─── Start Node ────────────────────────────────────────────────── */
+.startNode {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #ffffff;
+  border: 2px solid #10b981;
+  border-radius: 30px;
+  min-width: 200px;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.18);
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+
+.startNode:hover {
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.28);
+}
+
+.selected.startNode,
+.startNode.selected {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.35), 0 4px 14px rgba(16, 185, 129, 0.2);
+}
+
+.startIcon {
+  width: 28px;
+  height: 28px;
+  background: #10b981;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.startLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* ─── End Node ──────────────────────────────────────────────────── */
+.endNode {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #475569;
+  border: 2px solid #334155;
+  border-radius: 30px;
+  min-width: 200px;
+  box-shadow: 0 2px 8px rgba(71, 85, 105, 0.2);
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+
+.endNode:hover {
+  box-shadow: 0 4px 14px rgba(71, 85, 105, 0.3);
+}
+
+.selectedEnd {
+  box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.35) !important;
+}
+
+.endIcon {
+  width: 28px;
+  height: 28px;
+  background: #334155;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.endLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* ─── Section Node ──────────────────────────────────────────────── */
+.sectionNode {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 2px solid #3b82f6;
+  border-radius: 10px;
+  min-width: 235px;
+  max-width: 245px;
+  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.12);
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+
+.sectionNode:hover {
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.22);
+}
+
+.selectedSection {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35), 0 4px 12px rgba(59, 130, 246, 0.15) !important;
+}
+
+.sectionInGroup {
+  min-width: 235px;
+  max-width: 245px;
+}
+
+.sectionIcon {
+  width: 28px;
+  height: 28px;
+  background: #eff6ff;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+.sectionContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.sectionLabel {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sectionMeta {
+  font-size: 10.5px;
+  color: #94a3b8;
+  margin-top: 1px;
+}
+
+/* ─── Group Node ────────────────────────────────────────────────── */
+.groupNode {
+  background: rgba(245, 243, 255, 0.85);
+  border: 2px dashed #7c3aed;
+  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+  box-sizing: border-box;
+}
+
+.groupNode:hover {
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.15);
+}
+
+.selectedGroup {
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.3), 0 4px 16px rgba(124, 58, 237, 0.15) !important;
+}
+
+.groupHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.groupIconWrap {
+  width: 26px;
+  height: 26px;
+  background: #ede9fe;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7c3aed;
+  flex-shrink: 0;
+}
+
+.groupText {
+  flex: 1;
+  min-width: 0;
+}
+
+.groupLabel {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #4c1d95;
+}
+
+.groupDesc {
+  font-size: 10.5px;
+  color: #7c3aed;
+  margin-top: 1px;
+  opacity: 0.8;
+}
+
+.groupBadge {
+  font-size: 10px;
+  font-weight: 600;
+  color: #7c3aed;
+  background: #ede9fe;
+  border: 1px solid #c4b5fd;
+  border-radius: 20px;
+  padding: 2px 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
