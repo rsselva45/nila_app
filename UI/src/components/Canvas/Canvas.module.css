@@ -50,3 +50,22 @@
   stroke: #3b82f6;
   stroke-width: 2px;
 }
+
+/* ─────────────────────────────────────────────────────────────────
+   Responsive canvas tweaks
+───────────────────────────────────────────────────────────────── */
+
+/* Hide the minimap on small screens — it takes up canvas space */
+@media (max-width: 767px) {
+  .minimap {
+    display: none;
+  }
+}
+
+/* Compact controls on small screens */
+@media (max-width: 767px) {
+  :global(.react-flow__controls) {
+    transform: scale(0.85);
+    transform-origin: bottom left;
+  }
+}

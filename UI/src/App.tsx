@@ -9,24 +9,49 @@ import styles from './App.module.css';
 
 export default function App() {
   const [mode, setMode] = useState<'builder' | 'preview'>('builder');
-  const { learningPathId, loadCanvas } = useStore();
+  const [leftOpen, setLeftOpen] = useState(false);
+  const [rightOpen, setRightOpen] = useState(false);
 
+  const { learningPathId, loadCanvas, selectedNodeId, selectedEdgeId } = useStore();
+
+  // Restore canvas from backend on mount
   useEffect(() => {
     if (!learningPathId) return;
     getLearningPath(learningPathId).then(loadCanvas).catch(() => {
-      // ID in localStorage but path not found on server — start fresh
       localStorage.removeItem('nila_lp_id');
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Auto-open the right panel on mobile when something is selected
+  useEffect(() => {
+    if (selectedNodeId || selectedEdgeId) {
+      setRightOpen(true);
+    }
+  }, [selectedNodeId, selectedEdgeId]);
+
+  function closeAll() {
+    setLeftOpen(false);
+    setRightOpen(false);
+  }
+
   return (
     <div className={styles.root}>
-      <Header activeMode={mode} onModeChange={setMode} />
+      <Header
+        activeMode={mode}
+        onModeChange={setMode}
+        onToggleLeft={() => setLeftOpen((o) => !o)}
+        leftOpen={leftOpen}
+      />
+
+      {(leftOpen || rightOpen) && (
+        <div className={styles.backdrop} onClick={closeAll} />
+      )}
+
       <div className={styles.workspace}>
-        <LeftPanel />
+        <LeftPanel isOpen={leftOpen} onClose={() => setLeftOpen(false)} />
         <Canvas />
-        <PropertiesPanel />
+        <PropertiesPanel isOpen={rightOpen} onClose={() => setRightOpen(false)} />
       </div>
     </div>
   );

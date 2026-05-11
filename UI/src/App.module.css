@@ -12,4 +12,21 @@
   display: flex;
   flex: 1;
   overflow: hidden;
+  position: relative;
+}
+
+/* Backdrop shown behind open panel overlays on mobile */
+.backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  z-index: 40;
+  backdrop-filter: blur(1px);
+}
+
+@media (max-width: 767px) {
+  .backdrop {
+    display: block;
+  }
 }

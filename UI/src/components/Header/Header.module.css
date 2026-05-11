@@ -7,8 +7,43 @@
   background: #ffffff;
   border-bottom: 1px solid #e2e8f0;
   flex-shrink: 0;
-  gap: 16px;
+  gap: 12px;
   z-index: 10;
+}
+
+/* ── Hamburger (mobile only) ── */
+.menuBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #475569;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.menuBtn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.menuBtnActive {
+  background: #f1f5f9;
+  border-color: #3b82f6;
+  color: #1e293b;
+}
+
+/* ── Title block ── */
+.title {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  /* flex: 1; */
 }
 
 .title h1 {
@@ -24,14 +59,37 @@
   color: #64748b;
   margin: 0;
   line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+.nameInput {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  max-width: 220px;
+  line-height: 1.2;
+  padding: 0;
+  min-width: 0;
+}
+
+.nameInput:focus {
+  border-bottom: 1px solid #7c3aed;
+}
+
+/* ── Mode tabs ── */
 .tabs {
   display: flex;
   background: #f1f5f9;
   border-radius: 8px;
   padding: 3px;
   gap: 2px;
+  flex-shrink: 0;
 }
 
 .tab {
@@ -47,6 +105,7 @@
   background: transparent;
   color: #64748b;
   transition: all 0.15s;
+  white-space: nowrap;
 }
 
 .tab:hover {
@@ -62,10 +121,12 @@
   color: #ffffff;
 }
 
+/* ── Action buttons ── */
 .actions {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .btnSecondary {
@@ -81,6 +142,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s;
+  white-space: nowrap;
 }
 
 .btnSecondary:hover {
@@ -101,6 +163,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s;
+  white-space: nowrap;
 }
 
 .btnPrimary:hover {
@@ -113,20 +176,9 @@
   cursor: not-allowed;
 }
 
-.nameInput {
-  font-size: 14px;
-  font-weight: 600;
-  color: #1e293b;
-  border: none;
-  outline: none;
-  background: transparent;
-  width: 220px;
-  line-height: 1.2;
-  padding: 0;
-}
-
-.nameInput:focus {
-  border-bottom: 1px solid #7c3aed;
+/* Text label hidden on icon-only mode */
+.btnLabel {
+  display: inline;
 }
 
 .saveIndicator {
@@ -136,6 +188,7 @@
   font-size: 12px;
   color: #16a34a;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .saveError {
@@ -148,4 +201,108 @@
 
 .spin {
   animation: spin 0.8s linear infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Tablet  768 – 1023 px
+───────────────────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .header {
+    padding: 0 14px;
+    gap: 10px;
+  }
+
+  .nameInput {
+    max-width: 160px;
+  }
+
+  .tab {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .btnSecondary,
+  .btnPrimary {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .title p {
+    display: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Mobile  < 768 px — compact header with hamburger
+───────────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .header {
+    padding: 0 12px;
+    height: 52px;
+    gap: 8px;
+  }
+
+  .menuBtn {
+    display: flex;
+  }
+
+  .title {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .nameInput {
+    max-width: 140px;
+    font-size: 13px;
+  }
+
+  /* Hide the subtitle on mobile */
+  .title p {
+    display: none;
+  }
+
+  /* Hide the Builder/Preview tab text labels on very small screens */
+  .tabs {
+    border-radius: 7px;
+    padding: 2px;
+  }
+
+  .tab {
+    padding: 5px 10px;
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  /* Hide text in action buttons — keep icons only */
+  .btnLabel {
+    display: none;
+  }
+
+  .btnSecondary {
+    padding: 7px 10px;
+  }
+
+  .btnPrimary {
+    padding: 7px 10px;
+  }
+
+  /* Hide save indicator text on very small screens */
+  .saveIndicator span:last-child {
+    display: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Large desktop  ≥ 1440 px
+───────────────────────────────────────────────────────────────── */
+@media (min-width: 1440px) {
+  .header {
+    padding: 0 28px;
+    gap: 20px;
+  }
+
+  .nameInput {
+    max-width: 280px;
+    font-size: 15px;
+  }
 }

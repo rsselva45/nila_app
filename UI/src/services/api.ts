@@ -1,9 +1,9 @@
 import type { Node, Edge } from 'reactflow';
 import type { SectionNodeData, GroupNodeData, NodeCondition } from '../types';
 
-// const BASE_URL = 'https://nilaapp-production.up.railway.app/api';
+const BASE_URL = 'https://nilaapp-production.up.railway.app/api';
 
-const BASE_URL = 'http://localhost:8080/api';
+// const BASE_URL = 'http://localhost:8080/api';
 
 
 // ── API shape types ──────────────────────────────────────────────────────────
