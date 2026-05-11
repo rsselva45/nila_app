@@ -35,7 +35,12 @@ const exampleTree = [
   },
 ];
 
-export function LeftPanel() {
+interface LeftPanelProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export function LeftPanel({ isOpen = false, onClose: _onClose }: LeftPanelProps) {
   const [exampleOpen, setExampleOpen] = useState(true);
   const [components, setComponents] = useState<ApiComponent[]>([]);
   const [loadingComponents, setLoadingComponents] = useState(true);
@@ -68,7 +73,7 @@ export function LeftPanel() {
   };
 
   return (
-    <aside className={styles.panel}>
+    <aside className={`${styles.panel} ${isOpen ? styles.panelOpen : ''}`}>
       {/* Canvas elements */}
       <div className={styles.section}>
         <h2 className={styles.heading}>Add to Canvas</h2>

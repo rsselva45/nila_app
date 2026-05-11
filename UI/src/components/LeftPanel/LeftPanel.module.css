@@ -7,6 +7,45 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  /* Smooth transition for tablet resizing */
+  transition: width 0.2s ease, min-width 0.2s ease;
+}
+
+/* ── Tablet: narrower panel ── */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .panel {
+    width: 180px;
+    min-width: 180px;
+  }
+}
+
+/* ── Large desktop: slightly wider ── */
+@media (min-width: 1440px) {
+  .panel {
+    width: 240px;
+    min-width: 240px;
+  }
+}
+
+/* ── Mobile: overlay drawer sliding from the left ── */
+@media (max-width: 767px) {
+  .panel {
+    position: fixed;
+    top: 52px; /* matches mobile header height */
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    min-width: 0;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
+    border-right: 1px solid #e2e8f0;
+  }
+
+  .panelOpen {
+    transform: translateX(0);
+  }
 }
 
 .section {

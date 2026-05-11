@@ -27,7 +27,12 @@ const DIFFICULTY_OPTIONS: { value: Difficulty; label: string }[] = [
   { value: 'adaptive', label: 'Adaptive' },
 ];
 
-export function PropertiesPanel() {
+interface PropertiesPanelProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export function PropertiesPanel({ isOpen = false, onClose }: PropertiesPanelProps) {
   const {
     nodes,
     edges,
@@ -57,9 +62,11 @@ export function PropertiesPanel() {
     [nodes]
   );
 
+  const panelClass = `${styles.panel} ${isOpen ? styles.panelOpen : ''}`;
+
   if (!selectedNode && !selectedEdge) {
     return (
-      <aside className={styles.panel}>
+      <aside className={panelClass}>
         <div className={styles.empty}>
           <p>Select a node or connection to view and edit its properties.</p>
         </div>
@@ -69,7 +76,7 @@ export function PropertiesPanel() {
 
   if (selectedEdge) {
     return (
-      <aside className={styles.panel}>
+      <aside className={panelClass}>
         <div className={styles.panelHeader}>
           <span className={styles.panelTitle}>Properties</span>
           <button className={styles.deleteBtn} onClick={() => deleteEdge(selectedEdge.id)} title="Delete connection">
@@ -115,7 +122,7 @@ export function PropertiesPanel() {
   const conditions = (nodeData as SectionNodeData).conditions ?? [];
 
   return (
-    <aside className={styles.panel}>
+    <aside className={panelClass}>
       <div className={styles.panelHeader}>
         <span className={styles.panelTitle}>Properties</span>
         {!isStart && !isEnd && (
