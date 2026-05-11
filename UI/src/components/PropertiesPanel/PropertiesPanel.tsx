@@ -32,7 +32,7 @@ interface PropertiesPanelProps {
   onClose?: () => void;
 }
 
-export function PropertiesPanel({ isOpen = false, onClose }: PropertiesPanelProps) {
+export function PropertiesPanel({ isOpen = false, onClose: _onClose }: PropertiesPanelProps) {
   const {
     nodes,
     edges,
